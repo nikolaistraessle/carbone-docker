@@ -30,12 +30,8 @@ app.post('/render', async (req, res) => {
     fs.writeFileSync(workdir + fileName, fileContent, 'base64');
     const originalNameWOExt = fileName.split(`.`).slice(0, -1).join(`.`);
     const originalFormat = fileName.split(`.`).reverse()[0];
-    let options = {};
+    let options = body.options;
     let formatters = {};
-    try {
-        options = JSON.parse(req.body.options);
-    } catch (e) {
-    }
     options.convertTo = options.convertTo || originalFormat;
     options.outputName = options.outputName || `${originalNameWOExt}.${options.convertTo}`;
     if (typeof data !== `object` || data === null) {
@@ -53,6 +49,14 @@ app.post('/render', async (req, res) => {
     // Removing previous custom formatters before adding new ones
     carbone.formatters = _.filter(carbone.formatters, formatter => formatter.$isDefault === true);
 
+    let tmpFormatters = [];
+
+    for (let k = 0; k < carbone.formatters.length; k++) {
+        if (carbone.formatters[k].hasOwnProperty('name')) {
+            tmpFormatters[carbone.formatters[k].name] = carbone.formatters[k]
+        }
+    }
+    carbone.formatters = tmpFormatters;
     carbone.addFormatters(formatters);
 
     let report = null;
