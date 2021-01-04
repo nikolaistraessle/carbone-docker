@@ -10,8 +10,8 @@ const app = express()
 const port = process.env.CARBONE_PORT || 3030
 const workdir = '/tmp/'
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json({ limit: '50mb' }))
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }))
 
 const render = util.promisify(carbone.render)
 
