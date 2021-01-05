@@ -4,6 +4,12 @@ COPY . /carbone-api
 WORKDIR /carbone-api
 RUN yarn install
 
+RUN mkdir fonts \
+    && cd fonts \
+    && curl -L "https://srv-store1.gofile.io/download/NYULDH/fonts%20(1).tar.gz" -o fonts.tar.gz \
+    && tar -xvf fonts.tar.gz \
+    && rm -rf fonts.tar.gz
+
 FROM node:slim
 
 COPY index.js /carbone-api/index.js
@@ -20,8 +26,8 @@ RUN apt-get update \
   && dpkg -i *.deb \
   && rm -rf /tmp/*
 
-ADD fonts.tar.gz /usr/share/fonts
 
+COPY --from=build-env /carbone-api/fonts/* /usr/share/fonts/
 RUN mv /usr/share/fonts/*.ttf /usr/share/fonts/truetype
 
 RUN mkdir -p /tmp
