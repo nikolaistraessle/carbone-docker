@@ -21,9 +21,9 @@ RUN apt-get update \
   && rm -rf /tmp/*
 
 
-COPY fonts/*.ttf /usr/share/fonts/truetype
-COPY fonts/*.TTF /usr/share/fonts/truetype
-COPY fonts/*.otf /usr/share/fonts/opentype
+COPY fonts/*.ttf /usr/share/fonts/truetype/
+COPY fonts/*.TTF /usr/share/fonts/truetype/
+COPY fonts/*.otf /usr/share/fonts/opentype/
 
 RUN mkdir -p /tmp
 WORKDIR /carbone-api
