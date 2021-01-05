@@ -22,7 +22,7 @@ RUN apt-get update \
 
 
 COPY fonts/* /usr/share/fonts/
-RUN mv /usr/share/fonts/*.ttf /usr/share/fonts/truetype
+RUN cp /usr/share/fonts/*.ttf /usr/share/fonts/truetype
 
 RUN mkdir -p /tmp
 WORKDIR /carbone-api
