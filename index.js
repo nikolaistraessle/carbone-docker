@@ -5,6 +5,7 @@ const carbone = require('carbone')
 const telejson = require('telejson')
 const express = require('express')
 const bodyParser = require('body-parser')
+const Encoder = require('code-128-encoder')
 require('dotenv').config()
 const app = express()
 const port = process.env.CARBONE_PORT || 3030
@@ -14,6 +15,8 @@ app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }))
 
 const render = util.promisify(carbone.render)
+
+const encoder = new Encoder()
 
 // Flagging default formatters to remove custom ones later
 for (const [key] of Object.entries(carbone.formatters)) {
@@ -61,6 +64,18 @@ app.post('/render', async (req, res) => {
     }
   }
   carbone.addFormatters(formatters)
+
+  carbone.addFormatters({
+    barcode: function upperCase (d, format) {
+      switch (format) {
+        case 'ean128':
+          return encoder.encode(d, { output: 'ascii', mapping: 0 })
+        case 'code39':
+          return '*' + d + '*'
+      }
+      return d
+    }
+  })
 
   let report = null
 
