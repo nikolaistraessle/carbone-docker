@@ -7,7 +7,6 @@ RUN yarn install
 FROM node:slim
 
 COPY index.js /carbone-api/index.js
-COPY test.html /carbone-api/test.html
 COPY package.json /carbone-api/package.json
 COPY yarn.lock /carbone-api/yarn.lock
 COPY --from=build-env /carbone-api/node_modules /carbone-api/node_modules
