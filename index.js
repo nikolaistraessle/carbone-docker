@@ -1,4 +1,3 @@
-const path = require('path')
 const fs = require('fs')
 const util = require('util')
 const carbone = require('carbone')
@@ -24,7 +23,7 @@ for (const [key] of Object.entries(carbone.formatters)) {
 }
 
 app.get('/', (req, res) => {
-  res.sendFile(path.resolve('./test.html'))
+  res.sendStatus(405)
 })
 
 app.post('/render', async (req, res) => {
@@ -49,27 +48,27 @@ app.post('/render', async (req, res) => {
       data = {}
     }
   }
-  if (req.body.formatters !== null && undefined !== req.body.formatters) {
-    try {
-      formatters = telejson.parse(req.body.formatters)
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
   // Removing previous custom formatters before adding new ones
+
   for (const [key] of Object.entries(carbone.formatters)) {
     if (!carbone.formatters[key].$isDefault) {
       delete carbone.formatters[key]
     }
   }
-  carbone.addFormatters(formatters)
+  if (req.body.formatters !== null && undefined !== req.body.formatters) {
+    try {
+      formatters = telejson.parse(req.body.formatters)
+      carbone.addFormatters(formatters)
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   carbone.addFormatters({
     barcode: function upperCase (d, format) {
       switch (format) {
         case 'ean128':
-          return encoder.encode(d, { output: 'ascii', mapping: 0 })
+          return encoder.encode(d, { output: encoder.OutputMode.ASCII, mapping: 0 })
         case 'code39':
           return '*' + d + '*'
       }
