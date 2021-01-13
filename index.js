@@ -68,7 +68,7 @@ app.post('/render', async (req, res) => {
     barcode: function upperCase (d, format) {
       switch (format) {
         case 'ean128':
-          return encoder.encode(d, { output: encoder.OutputMode.ASCII, mapping: 0 })
+          return encoder.encode(d, { output: 'ascii', mapping: 0 })
         case 'code39':
           return '*' + d + '*'
       }
