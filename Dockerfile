@@ -28,3 +28,5 @@ RUN mkdir -p /tmp
 WORKDIR /carbone-api
 RUN yarn
 CMD node index
+
+EXPOSE 3030
